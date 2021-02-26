@@ -2,6 +2,8 @@
 
 *Make this code kata following the classicist form of TDD*
 
+
+
 Write a program that displays numbers from 1 to 100.
 
 A number per line. Follow these rules:
