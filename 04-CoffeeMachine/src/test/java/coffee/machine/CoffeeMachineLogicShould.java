@@ -1,0 +1,141 @@
+package coffee.machine;
+
+import coffee.machine.domain.FinancialReport;
+import coffee.machine.domain.KindOfDrink;
+import coffee.machine.infrastructure.CustomerOrder;
+import coffee.machine.infrastructure.DrinkMakerAdapter;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
+
+public class CoffeeMachineLogicShould {
+
+    @Test
+    public void
+    be_able_to_produce_Command_for_DrinkMaker_when_Customer_order_1_tea_with_1_sugar_if_received_enough_money_for_it() {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("Tea", false, 1, 0.4)))
+                .isEqualTo("T:1:0");
+    }
+
+    @Test
+    public void
+    be_able_to_produce_Command_for_the_DrinkMaker_when_Customer_order_1_chocolate_with_no_sugar_if_received_enough_money_for_it() {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("Chocolate", false, 0, 0.5)))
+                .isEqualTo("H::");
+    }
+
+    @Test
+    public void
+    be_able_to_produce_Command_for_DrinkMaker_when_Customer_order_1_coffee_with_2_sugars__if_received_enough_money_for_it() {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("Coffee", false, 2, 0.6)))
+                .isEqualTo("C:2:0");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"Coffee:0.5:0,10", "Chocolate:0.2:0,30", "Tea:0.2:0,20"}, delimiter = ':')
+    public void
+    produce_order_with_amount_of_missing_money_to_the_DrinkMaker_when_no_money_has_been_received(String drink, String currencyMoney, String expected) {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder(drink, false, 2, Double.parseDouble(currencyMoney))))
+                .isEqualTo(String.format("M:Missing %s euro", expected));
+    }
+
+    @Test
+    public void
+    be_able_to_produce_Command_for_the_DrinkMaker_when_Customer_order_1_orange_juice_if_received_enough_money_for_it() {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("OrangeJuice", false, 0, 0.6)))
+                .isEqualTo("O::");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"Coffee:Ch", "Chocolate:Hh", "Tea:Th"}, delimiter = ':')
+    public void
+    be_able_to_produce_Command_for_the_DrinkMaker_when_Customer_order_1_extra_hot_drink_if_received_enough_money_for_it(String drink, String commandExtraHot) {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder(drink, true, 0, 0.6)))
+                .isEqualTo(String.format("%s::", commandExtraHot));
+    }
+
+    @Test
+    public void never_ask_an_ExtraHot_OrangeJuice_to_the_DrinkMaker_whatever_the_initial_Order() {
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("OrangeJuice", true, 0, 0.6)))
+                .isEqualTo("M:We can't deliver extra hot for OrangeJuice");
+
+    }
+
+    @Test
+    public void
+    report_how_many_of_drinks_was_sold_and_the_total_amount_of_money_earned() {
+        FinancialReport financialReport = new FinancialReport();
+        DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
+                .withFinancialReport(financialReport)
+                .buildCoffeeMachineLogic();
+
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 2, "Tea", 2, KindOfDrink.Tea);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 1, "Chocolate", 0, KindOfDrink.Chocolate);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 3, "OrangeJuice", 0, KindOfDrink.OrangeJuice);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 4, "Coffee", 0, KindOfDrink.Coffee);
+
+        assertThat(financialReport.totalBeverageSold()).isEqualTo(10);
+        assertThat(financialReport.totalAmount()).isEqualTo(5.5);
+    }
+
+    @Test
+    public void
+    notify_via_a_message_but_also_notify_us_via_eMail_when_shortage_is_detected() {
+
+        CoffeeMachineLogicBuilder coffeeMachineLogicBuilder = new CoffeeMachineLogicBuilder();
+        DrinkMakerAdapter commandDrinkMakerAdapter = coffeeMachineLogicBuilder
+                .withBeverageQuantityChecker("Chocolate", true)
+                .withEMailNotifier()
+                .buildCoffeeMachineLogic();
+
+        assertThat(commandDrinkMakerAdapter
+                .makeCommand(new CustomerOrder("Chocolate", true, 1, 0.6)))
+                .isEqualTo("M:Chocolate shortage (a notification has been sent to our logistic division). Please pick another option.");
+
+        verify(coffeeMachineLogicBuilder.getEMailNotifier(), Mockito.times(1))
+                .notifyMissingDrink("Chocolate");
+    }
+
+    private void assertThatBeverageCountForDrink(FinancialReport financialReport, DrinkMakerAdapter commandDrinkMakerAdapter, int times, String drink, int nbSugars, KindOfDrink kindOfDrink) {
+        makeSeveralCommands(commandDrinkMakerAdapter, times, drink, nbSugars);
+        assertThat(financialReport.beverageCount(kindOfDrink)).isEqualTo(times);
+    }
+
+    private void makeSeveralCommands(DrinkMakerAdapter commandDrinkMakerAdapter, int times, String drink, int nbSugars) {
+        for (int idx = 0; idx < times; idx++) {
+            commandDrinkMakerAdapter.makeCommand(new CustomerOrder(drink, false, nbSugars, 0.6));
+        }
+    }
+}
