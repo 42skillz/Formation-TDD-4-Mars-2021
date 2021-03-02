@@ -1,7 +1,6 @@
 import java.util.HashMap;
 
 public class CheckDivisibility {
-
     private final HashMap<Integer, String> symbols;
 
     public CheckDivisibility(HashMap<Integer, String> symbols) {

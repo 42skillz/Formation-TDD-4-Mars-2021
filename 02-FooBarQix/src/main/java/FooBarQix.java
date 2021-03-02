@@ -18,7 +18,6 @@ public class FooBarQix {
 
     public String generate(int number) {
         StringBuilder figure = checkDivisibility.isDivisibleBySymbols(number);
-
         figure.append(checkContent.containSymbols(number));
 
         return figure.toString().equals("") ?
