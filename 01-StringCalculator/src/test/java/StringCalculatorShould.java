@@ -1,0 +1,60 @@
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+public class StringCalculatorShould {
+    @Test
+    public void return_zero_when_string_number_is_empty() throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("")).isEqualTo(0);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1:1", "2:2"}, delimiter = ':')
+    public void return_one_when_string_number_contains_one(String numbers, String expected) throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add(numbers)).isEqualTo(Integer.parseInt(expected));
+    }
+
+    @Test
+    public void add_numbers_when_string_number_contains_two_number() throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("1,2")).isEqualTo(3);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1,2,3:6", "1,2,3,4:10"}, delimiter = ':')
+    public void add_numbers_when_string_number_contains_unknown_amount_of_number(String stringNumbers, String expected) throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add(stringNumbers)).isEqualTo(Integer.parseInt(expected));
+    }
+
+    @Test
+    public void support_new_line_as_delimiter_when_add_numbers() throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("1\n2,3")).isEqualTo(6);
+    }
+
+    @Test
+    public void support_different_delimiters_when_add_numbers() throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("//;\n1;2;3")).isEqualTo(6);
+    }
+
+    @Test
+    public void raise_exception_when_string_number_contains_negatives_numbers() {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThatThrownBy(() -> stringCalculator.add("1,-2,3,-4"))
+                .isInstanceOf(Exception.class)
+                .hasMessage("negatives not allowed:-2,-4");
+    }
+
+    @Test
+    public void ignored_numbers_when_they_are_bigger_than_1000() throws Exception {
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("1001,2")).isEqualTo(2);
+    }
+}
