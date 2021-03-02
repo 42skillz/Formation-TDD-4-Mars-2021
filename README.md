@@ -6,9 +6,9 @@ Avant de regarder les codes proposés, prenez le temps de réaliser vos propres 
 
 ## Katas
 
-__[1. StringCalculator](./01-StringCalculator/README.md)__
-__[2. FooBarQix](./02-FooBarQix/README.md)__
-__[3. MovieRental](./03-MovieRental/README.md)__
-__[4. CoffeeMachine](./04-CoffeeMachine/README.md)__
+1. __[StringCalculator](./01-StringCalculator/README.md)__
+2. __[FooBarQix](./02-FooBarQix/README.md)__
+3. __[MovieRental](./03-MovieRental/README.md)__
+4. __[CoffeeMachine](./04-CoffeeMachine/README.md)__
 
 
