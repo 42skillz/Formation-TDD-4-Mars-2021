@@ -62,7 +62,7 @@ public class FooBarQixShould {
     @Test
     public void support_other_symbols_without_changing_the_code() {
         assertThat(new FooBarQix(new HashMap<>() {{put(3, "Fizz"); put(5, "Buzz"); put(7, "Oua"); }})
-                .generate(51))
-                .isEqualTo("FizzBuzz");
+                .generate(105/* 3*5*7*/))
+                .isEqualTo("FizzBuzzOuaBuzz");
     }
 }

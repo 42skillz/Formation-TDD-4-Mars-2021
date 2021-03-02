@@ -9,11 +9,11 @@ public class CheckDivisibility {
     }
 
     public StringBuilder isDivisibleBySymbols(int number) {
-        StringBuilder figure = new StringBuilder();
+        StringBuilder figures = new StringBuilder();
         for (Integer key : this.symbols.keySet()) {
             if (number % key == 0)
-                figure.append(this.symbols.get(key));
+                figures.append(this.symbols.get(key));
         }
-        return figure;
+        return figures;
     }
 }

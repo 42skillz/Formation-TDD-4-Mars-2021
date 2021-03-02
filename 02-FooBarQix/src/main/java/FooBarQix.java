@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class FooBarQix {
-    private CheckContented checkContented;
+    private CheckContent checkContent;
     private CheckDivisibility checkDivisibility;
     HashMap<Integer, String> symbols;
 
@@ -12,14 +12,14 @@ public class FooBarQix {
 
     public FooBarQix(HashMap<Integer, String> symbols) {
         this.symbols  = symbols;
-        checkContented = new CheckContented(this.symbols);
+        checkContent = new CheckContent(this.symbols);
         checkDivisibility = new CheckDivisibility(this.symbols);
     }
 
     public String generate(int number) {
         StringBuilder figure = checkDivisibility.isDivisibleBySymbols(number);
 
-        figure.append(checkContented.containSymbols(number));
+        figure.append(checkContent.containSymbols(number));
 
         return figure.toString().equals("") ?
                 Integer.toString(number) :
