@@ -24,10 +24,10 @@
      - Example: "//;\n1;2" should return 3 (the delimiter is ;)
 2. This first line is optional; all existing scenarios (using , or \n) should work as before.
 
-### 5.Calling Add with a negative number will throw an exception "Negatives not allowed: "listing all negative numbers that were in the list of numbers
+### 5. Calling Add with a negative number will throw an exception "Negatives not allowed: "listing all negative numbers that were in the list of numbers
 
 1. Example “-1,2” throws "Negatives not allowed: -1"
 2. Example “2,-4,3,-5” throws "Negatives not allowed: -4,-5"
 
-### 6.Numbers bigger than 1000 should be ignored
+### 6. Numbers bigger than 1000 should be ignored
 1. Example: “1001,2” returns 2
