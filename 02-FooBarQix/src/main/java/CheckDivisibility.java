@@ -7,7 +7,7 @@ public class CheckDivisibility {
         this.symbols = symbols;
     }
 
-    public StringBuilder isDivisibleBySymbols(int number) {
+    public StringBuilder applyDivisibilityRule(int number) {
         StringBuilder figures = new StringBuilder();
         for (Integer key : this.symbols.keySet()) {
             if (number % key == 0)

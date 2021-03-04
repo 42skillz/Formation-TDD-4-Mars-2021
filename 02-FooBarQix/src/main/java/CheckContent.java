@@ -7,7 +7,7 @@ public class CheckContent {
         this.symbols = symbols;
     }
 
-    StringBuilder containSymbols(int number) {
+    StringBuilder applyContentRule(int number) {
         StringBuilder figures = new StringBuilder();
         for (Character digit : Integer.toString(number).toCharArray()) {
             for (Integer key : this.symbols.keySet()) {
