@@ -6,8 +6,11 @@ import coffee.machine.infrastructure.CustomerOrder;
 import coffee.machine.infrastructure.DrinkMakerAdapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
@@ -47,16 +50,24 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("C:2:0");
     }
 
+    static Stream<Arguments> argWhenAmountOfMissingMoney()
+    {
+        return Stream.of(Arguments.of("Coffee", 0.5, 0.10),
+                Arguments.of("Chocolate", 0.2, 0.30),
+                Arguments.of("Tea", 0.2, 0.2)
+                );
+    }
+
     @ParameterizedTest
-    @CsvSource(value = {"Coffee:0.5:0,10", "Chocolate:0.2:0,30", "Tea:0.2:0,20"}, delimiter = ':')
+    @MethodSource("argWhenAmountOfMissingMoney")
     public void
-    produce_order_with_amount_of_missing_money_to_the_DrinkMaker_when_no_money_has_been_received(String drink, String currencyMoney, String expected) {
+    produce_order_with_amount_of_missing_money_to_the_DrinkMaker_when_no_money_has_been_received(String drink, double currencyMoney, double expected) {
         DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()
                 .buildCoffeeMachineLogic();
 
         assertThat(commandDrinkMakerAdapter
-                .makeCommand(new CustomerOrder(drink, false, 2, Double.parseDouble(currencyMoney))))
-                .isEqualTo(String.format("M:Missing %s euro", expected));
+                .makeCommand(new CustomerOrder(drink, false, 2, currencyMoney)))
+                .isEqualTo(String.format("M:Missing %.2f euro", expected));
     }
 
     @Test
@@ -70,8 +81,16 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("O::");
     }
 
+    static Stream<Arguments> argWhenCustomerOrderOneExtraHotDrink()
+    {
+        return Stream.of(Arguments.of("Coffee", "Ch"),
+                Arguments.of("Chocolate", "Hh"),
+                Arguments.of("Tea", "Th")
+        );
+    }
+
     @ParameterizedTest
-    @CsvSource(value = {"Coffee:Ch", "Chocolate:Hh", "Tea:Th"}, delimiter = ':')
+    @MethodSource("argWhenCustomerOrderOneExtraHotDrink")
     public void
     be_able_to_produce_Command_for_the_DrinkMaker_when_Customer_order_1_extra_hot_drink_if_received_enough_money_for_it(String drink, String commandExtraHot) {
         DrinkMakerAdapter commandDrinkMakerAdapter = new CoffeeMachineLogicBuilder()

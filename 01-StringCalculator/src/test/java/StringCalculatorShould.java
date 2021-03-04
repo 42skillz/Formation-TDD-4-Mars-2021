@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -12,11 +15,16 @@ public class StringCalculatorShould {
         assertThat(stringCalculator.add("")).isEqualTo(0);
     }
 
+    static Stream<Arguments> argWhenGivenOneNumber()
+    {
+        return Stream.of(Arguments.of("1", 1), Arguments.of("2", 2));
+    }
+
     @ParameterizedTest
-    @CsvSource(value = {"1:1", "2:2"}, delimiter = ':')
-    public void return_one_when_string_number_contains_one(String numbers, String expected) throws Exception {
+    @MethodSource("argWhenGivenOneNumber")
+    public void return_number_when_string_number_contains_one_number(String numbers, int expected) throws Exception {
         StringCalculator stringCalculator = new StringCalculator();
-        assertThat(stringCalculator.add(numbers)).isEqualTo(Integer.parseInt(expected));
+        assertThat(stringCalculator.add(numbers)).isEqualTo(expected);
     }
 
     @Test
@@ -24,12 +32,15 @@ public class StringCalculatorShould {
         StringCalculator stringCalculator = new StringCalculator();
         assertThat(stringCalculator.add("1,2")).isEqualTo(3);
     }
-
+    static Stream<Arguments> argWhenStringNumbersContainsUnknownAmountOfNumber()
+    {
+        return Stream.of(Arguments.of("1,2,3", 6), Arguments.of("1,2,3,4", 10));
+    }
     @ParameterizedTest
-    @CsvSource(value = {"1,2,3:6", "1,2,3,4:10"}, delimiter = ':')
-    public void add_numbers_when_string_number_contains_unknown_amount_of_number(String stringNumbers, String expected) throws Exception {
+    @MethodSource("argWhenStringNumbersContainsUnknownAmountOfNumber")
+    public void add_numbers_when_string_number_contains_unknown_amount_of_number(String stringNumbers, int expected) throws Exception {
         StringCalculator stringCalculator = new StringCalculator();
-        assertThat(stringCalculator.add(stringNumbers)).isEqualTo(Integer.parseInt(expected));
+        assertThat(stringCalculator.add(stringNumbers)).isEqualTo(expected);
     }
 
     @Test
