@@ -32,9 +32,9 @@ public class CoffeeMachineLogicBuilder {
     }
 
     public CoffeeMachineLogicBuilder withBeverageQuantityChecker(String drink, boolean isEmpty) {
-
+        DrinkInstructionAdapter drinkInstructionAdapter = new DrinkInstructionAdapter();
         this.beverageQuantityChecker = Mockito.mock(BeverageQuantityChecker.class);
-        when(beverageQuantityChecker.isEmpty(drink)).thenReturn(isEmpty);
+        when(beverageQuantityChecker.isEmpty(drinkInstructionAdapter.adaptDrink(drink))).thenReturn(isEmpty);
         return this;
     }
 

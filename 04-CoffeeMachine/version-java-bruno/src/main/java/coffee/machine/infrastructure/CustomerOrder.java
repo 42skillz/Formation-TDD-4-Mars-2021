@@ -13,12 +13,19 @@ public class CustomerOrder {
         this.customerMoney = customerMoney;
     }
 
-    public String getDrink() { return drink; }
+    public String getDrink() {
+        return drink;
+    }
+
     public double getMoney() {
         return this.customerMoney;
     }
+
     public int getNbSugars() {
         return this.nbSugars;
     }
-    public boolean getExtraHot() { return this.extraHot; }
+
+    public boolean getExtraHot() {
+        return this.extraHot;
+    }
 }

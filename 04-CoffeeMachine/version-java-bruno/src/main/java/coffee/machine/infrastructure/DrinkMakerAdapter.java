@@ -1,6 +1,11 @@
 package coffee.machine.infrastructure;
 
-import coffee.machine.domain.*;
+import coffee.machine.domain.DrinkInstruction;
+import coffee.machine.domain.DrinkInstructionFailed.DrinkInstructionFailed;
+import coffee.machine.domain.IProvideDrinkInstruction;
+import coffee.machine.domain.IValidateDrinkInstruction;
+import coffee.machine.domain.KindOfDrink;
+import coffee.machine.infrastructure.ErrorMessageAdapter.*;
 
 import java.util.HashMap;
 
@@ -13,11 +18,12 @@ public class DrinkMakerAdapter {
     public DrinkMakerAdapter(IValidateDrinkInstruction logicService, IProvideDrinkInstruction provideDrinkInstructions) {
         this.coffeeMachineLogic = logicService;
         this.provideDrinkInstructions = provideDrinkInstructions;
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.Tea, 'T');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.Chocolate, 'H');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.Coffee, 'C');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.OrangeJuice, 'O');
+        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.TEA, 'T');
+        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.CHOCOLATE, 'H');
+        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.COFFEE, 'C');
+        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.ORANGE_JUICE, 'O');
     }
+
 
     public String makeCommand(CustomerOrder order) {
         // From infrastructure => to Domain
@@ -35,13 +41,21 @@ public class DrinkMakerAdapter {
 
     public String adapt(DrinkInstruction drinkInstruction) {
         if (isDrinkInstructionFailed(drinkInstruction)) {
-            return SendErrorMessageToCoffeeMachine(drinkInstruction);
+            return SendErrorMessageToCoffeeMachine((DrinkInstructionFailed) drinkInstruction);
         }
         return adaptDrinkInstruction(drinkInstruction);
     }
 
-    private String SendErrorMessageToCoffeeMachine(DrinkInstruction drinkInstruction) {
-        return ((DrinkInstructionFailed) drinkInstruction).getErrorMessage();
+    private String SendErrorMessageToCoffeeMachine(DrinkInstructionFailed drinkInstructionFailed) {
+        HashMap<DrinkInstructionFailed.KindDrinkInstructionFailed, ErrorMessageAdapter> adaptErrorMessages = new HashMap<>();
+
+        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkNotSupported, new ErrorMessageDrinkNotSupportedAdapter(drinkInstructionFailed));
+        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkShortage, new ErrorMessageFailedShortageAdapter(drinkInstructionFailed));
+        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkIncompatibilityWithExtraHot, new ErrorMessageIncompatibilityWithExtraHotAdapter(drinkInstructionFailed));
+        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.MissingMoney, new ErrorMessageMissingMoneyAdapter(drinkInstructionFailed));
+
+        return adaptErrorMessages.get(drinkInstructionFailed.getKindDrinkInstructionFailed()).formatMessage();
+
     }
 
     private String adaptDrinkInstruction(DrinkInstruction drinkInstruction) {
@@ -69,7 +83,7 @@ public class DrinkMakerAdapter {
         return instructions.getExtraHot() ? "h" : "";
     }
 
-    private String adaptDrink(DrinkInstruction instructions) {
-        return this.kindOfDrinkToDrinkDigit.get(instructions.getDrink()).toString();
+    private String adaptDrink(DrinkInstruction drinkInstruction) {
+        return this.kindOfDrinkToDrinkDigit.get(drinkInstruction.getDrink()).toString();
     }
 }

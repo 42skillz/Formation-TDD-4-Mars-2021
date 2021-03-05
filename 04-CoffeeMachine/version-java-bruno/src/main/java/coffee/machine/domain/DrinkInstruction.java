@@ -17,6 +17,7 @@ public class DrinkInstruction {
     }
 
     public void setDrink(KindOfDrink drink) {
+
         this.drink = drink;
     }
 

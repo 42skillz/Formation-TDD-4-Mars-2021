@@ -17,6 +17,20 @@ import static org.mockito.Mockito.verify;
 
 public class CoffeeMachineLogicShould {
 
+    static Stream<Arguments> argWhenAmountOfMissingMoney() {
+        return Stream.of(Arguments.of("Coffee", 0.5, 0.10),
+                Arguments.of("Chocolate", 0.2, 0.30),
+                Arguments.of("Tea", 0.2, 0.2)
+        );
+    }
+
+    static Stream<Arguments> argWhenCustomerOrderOneExtraHotDrink() {
+        return Stream.of(Arguments.of("Coffee", "Ch"),
+                Arguments.of("Chocolate", "Hh"),
+                Arguments.of("Tea", "Th")
+        );
+    }
+
     @Test
     public void
     be_able_to_produce_Command_for_DrinkMaker_when_Customer_order_1_tea_with_1_sugar_if_received_enough_money_for_it() {
@@ -50,14 +64,6 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("C:2:0");
     }
 
-    static Stream<Arguments> argWhenAmountOfMissingMoney()
-    {
-        return Stream.of(Arguments.of("Coffee", 0.5, 0.10),
-                Arguments.of("Chocolate", 0.2, 0.30),
-                Arguments.of("Tea", 0.2, 0.2)
-                );
-    }
-
     @ParameterizedTest
     @MethodSource("argWhenAmountOfMissingMoney")
     public void
@@ -79,14 +85,6 @@ public class CoffeeMachineLogicShould {
         assertThat(commandDrinkMakerAdapter
                 .makeCommand(new CustomerOrder("OrangeJuice", false, 0, 0.6)))
                 .isEqualTo("O::");
-    }
-
-    static Stream<Arguments> argWhenCustomerOrderOneExtraHotDrink()
-    {
-        return Stream.of(Arguments.of("Coffee", "Ch"),
-                Arguments.of("Chocolate", "Hh"),
-                Arguments.of("Tea", "Th")
-        );
     }
 
     @ParameterizedTest
@@ -120,10 +118,10 @@ public class CoffeeMachineLogicShould {
                 .withFinancialReport(financialReport)
                 .buildCoffeeMachineLogic();
 
-        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 2, "Tea", 2, KindOfDrink.Tea);
-        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 1, "Chocolate", 0, KindOfDrink.Chocolate);
-        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 3, "OrangeJuice", 0, KindOfDrink.OrangeJuice);
-        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 4, "Coffee", 0, KindOfDrink.Coffee);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 2, "Tea", 2, KindOfDrink.TEA);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 1, "Chocolate", 0, KindOfDrink.CHOCOLATE);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 3, "OrangeJuice", 0, KindOfDrink.ORANGE_JUICE);
+        assertThatBeverageCountForDrink(financialReport, commandDrinkMakerAdapter, 4, "Coffee", 0, KindOfDrink.COFFEE);
 
         assertThat(financialReport.totalBeverageSold()).isEqualTo(10);
         assertThat(financialReport.totalAmount()).isEqualTo(5.5);
@@ -144,7 +142,7 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("M:Chocolate shortage (a notification has been sent to our logistic division). Please pick another option.");
 
         verify(coffeeMachineLogicBuilder.getEMailNotifier(), Mockito.times(1))
-                .notifyMissingDrink("Chocolate");
+                .notifyMissingDrink("CHOCOLATE");
     }
 
     private void assertThatBeverageCountForDrink(FinancialReport financialReport, DrinkMakerAdapter commandDrinkMakerAdapter, int times, String drink, int nbSugars, KindOfDrink kindOfDrink) {
