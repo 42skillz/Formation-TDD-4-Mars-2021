@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeMachine.Tests", "CoffeeMachine.Tests\CoffeeMachine.Tests.csproj", "{DC5765FE-413A-4A9D-BDA2-A15ACAE2DA2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81FCA344-D5FD-4D0C-8019-1E8D3FC14308}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC5765FE-413A-4A9D-BDA2-A15ACAE2DA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5765FE-413A-4A9D-BDA2-A15ACAE2DA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC5765FE-413A-4A9D-BDA2-A15ACAE2DA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5765FE-413A-4A9D-BDA2-A15ACAE2DA2C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6CB2878-4279-478C-B3DD-F665B5B3C17E}
+	EndGlobalSection
+EndGlobal
