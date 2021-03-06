@@ -5,13 +5,13 @@ namespace CoffeeMachine.Tests
 {
     public class CoffeeMachineBuilder
     {
-        private ITalkToTheDrinkMaker _drinkMakerPort;
+        private ITalkTheDrinkMakerProtocol _drinkMakerProtocol;
         private ICheckBeverageQuantity _beverageQuantityChecker;
         private INotifyViaEMail _emailNotifier;
 
-        public CoffeeMachineBuilder WithDrinkMakerAdapter(ITalkToTheDrinkMaker drinkMakerPort)
+        public CoffeeMachineBuilder WithDrinkMakerProtocol(ITalkTheDrinkMakerProtocol drinkMakerProtocol)
         {
-            _drinkMakerPort = drinkMakerPort;
+            _drinkMakerProtocol = drinkMakerProtocol;
             return this;
         }
 
@@ -34,7 +34,7 @@ namespace CoffeeMachine.Tests
             var beverageQuantityChecker = _beverageQuantityChecker ?? Substitute.For<ICheckBeverageQuantity>();
             var notifyViaEMail = _emailNotifier ?? Substitute.For<INotifyViaEMail>();
 
-            var machineLogic = new CoffeeMachineLogic(_drinkMakerPort, beverageQuantityChecker, notifyViaEMail);
+            var machineLogic = new CoffeeMachineLogic(_drinkMakerProtocol, beverageQuantityChecker, notifyViaEMail);
 
             return machineLogic;
         }

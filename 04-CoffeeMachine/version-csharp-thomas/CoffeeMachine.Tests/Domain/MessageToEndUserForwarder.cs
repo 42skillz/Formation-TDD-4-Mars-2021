@@ -4,21 +4,21 @@ namespace CoffeeMachine.Tests.Domain
 {
     public class MessageToEndUserForwarder : IForwardMessagesToEndUser
     {
-        private readonly ITalkToTheDrinkMaker _drinkMakerAdapter;
+        private readonly ITalkTheDrinkMakerProtocol _drinkMakerProtocol;
 
-        public MessageToEndUserForwarder(ITalkToTheDrinkMaker drinkMakerAdapter)
+        public MessageToEndUserForwarder(ITalkTheDrinkMakerProtocol drinkMakerProtocol)
         {
-            _drinkMakerAdapter = drinkMakerAdapter;
+            _drinkMakerProtocol = drinkMakerProtocol;
         }
 
         public void SendMessage(string message)
         {
-            _drinkMakerAdapter.Send($"M:{message}");
+            _drinkMakerProtocol.Send($"M:{message}");
         }
 
         public void SendMissingAmountMessage(in decimal missingAmount)
         {
-            _drinkMakerAdapter.Send($"M:{GenerateMissingAmountMessageWithProperCulture(missingAmount)}");
+            _drinkMakerProtocol.Send($"M:{GenerateMissingAmountMessageWithProperCulture(missingAmount)}");
         }
 
         private static string GenerateMissingAmountMessageWithProperCulture(decimal missingAmount)

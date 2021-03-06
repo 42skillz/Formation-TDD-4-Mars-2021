@@ -1,6 +1,6 @@
 namespace CoffeeMachine.Tests.Domain
 {
-    public interface ITalkToTheDrinkMaker
+    public interface ITalkTheDrinkMakerProtocol
     {
         void Send(string instructionsProtocol);
     }

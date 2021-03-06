@@ -2,9 +2,23 @@ using System.Text;
 
 namespace CoffeeMachine.Tests.Domain
 {
-    public class DrinkMakerAdapter
+    public class DrinkMakerAdapter : IMakeDrink
     {
-        public static string AdaptToDrinkMakerInstruction(CustomerIncomingOrder order)
+        private readonly ITalkTheDrinkMakerProtocol _drinkMakerProtocol;
+
+        public DrinkMakerAdapter(ITalkTheDrinkMakerProtocol drinkMakerProtocol)
+        {
+            _drinkMakerProtocol = drinkMakerProtocol;
+        }
+
+        public void MakeDrink(CustomerIncomingOrder order)
+        {
+            var instruction = AdaptToDrinkMakerInstruction(order);
+
+            _drinkMakerProtocol.Send(instruction);
+        }
+
+        private static string AdaptToDrinkMakerInstruction(CustomerIncomingOrder order)
         {
             var instructions = new StringBuilder();
 

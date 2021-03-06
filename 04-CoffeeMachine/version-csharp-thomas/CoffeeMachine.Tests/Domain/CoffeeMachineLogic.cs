@@ -2,7 +2,7 @@ namespace CoffeeMachine.Tests.Domain
 {
     public class CoffeeMachineLogic
     {
-        private readonly ITalkToTheDrinkMaker _drinkMakerAdapter;
+        private readonly IMakeDrink _drinkMakerAdapter;
         private readonly ICheckBeverageQuantity _beverageQuantityChecker;
         private readonly INotifyViaEMail _emailNotifier;
         private readonly IForwardMessagesToEndUser _endUserForwarder;
@@ -11,16 +11,17 @@ namespace CoffeeMachine.Tests.Domain
         private decimal? _receivedMoney;
         private CustomerIncomingOrder _receivedOrder;
 
-        public CoffeeMachineLogic(ITalkToTheDrinkMaker drinkMakerAdapter, ICheckBeverageQuantity beverageQuantityChecker, INotifyViaEMail emailNotifier)
+        public CoffeeMachineLogic(ITalkTheDrinkMakerProtocol drinkMakerProtocol, ICheckBeverageQuantity beverageQuantityChecker, INotifyViaEMail emailNotifier)
         {
-            _drinkMakerAdapter = drinkMakerAdapter;
+            _drinkMakerAdapter = new DrinkMakerAdapter(drinkMakerProtocol);
+            _endUserForwarder = new MessageToEndUserForwarder(drinkMakerProtocol);
+            
             _beverageQuantityChecker = beverageQuantityChecker;
             _emailNotifier = emailNotifier;
             _analytics = new CoffeeMachineAnalytics();
-            _endUserForwarder = new MessageToEndUserForwarder(drinkMakerAdapter);
         }
         
-        private decimal ReceivedMoney => _receivedMoney.HasValue ? _receivedMoney.Value : 0;
+        private decimal ReceivedMoney => _receivedMoney ?? 0;
 
         public void Receive(CustomerIncomingOrder order)
         {
@@ -39,8 +40,7 @@ namespace CoffeeMachine.Tests.Domain
                 return;
             }
 
-            var instructions = DrinkMakerAdapter.AdaptToDrinkMakerInstruction(order);
-            MakeBeverageTransaction(instructions);
+            ExecuteDrinkTransaction(order);
         }
 
         public void ReceiveMoney(decimal amountInEuro)
@@ -49,9 +49,7 @@ namespace CoffeeMachine.Tests.Domain
 
             if (ReceivedEnoughMoneyFor(_receivedOrder))
             {
-                var instruction = DrinkMakerAdapter.AdaptToDrinkMakerInstruction(_receivedOrder);
-
-                MakeBeverageTransaction(instruction);
+                ExecuteDrinkTransaction(_receivedOrder);
             }
             else
             {
@@ -74,9 +72,9 @@ namespace CoffeeMachine.Tests.Domain
             _receivedOrder = order;
         }
 
-        private void MakeBeverageTransaction(string instructions)
+        private void ExecuteDrinkTransaction(CustomerIncomingOrder order)
         {
-            _drinkMakerAdapter.Send(instructions);
+            _drinkMakerAdapter.MakeDrink(order);
             
             // Log the transaction
             _analytics.Record(_receivedOrder, ReceivedMoney);

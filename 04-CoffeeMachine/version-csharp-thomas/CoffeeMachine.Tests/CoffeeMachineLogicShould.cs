@@ -11,185 +11,185 @@ namespace CoffeeMachine.Tests
         [Test]
         public void Be_able_to_ask_a_Tea_with_1_Sugar_and_a_Stick_to_the_DrinkMaker_if_received_enough_money_for_it_before()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
 
             machineLogic.ReceiveMoney(0.4m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("T:1:0");
+            drinkMakerProtocol.Received(1).Send("T:1:0");
         }
 
         [Test]
         public void Be_able_to_ask_a_Tea_with_1_Sugar_and_a_Stick_to_the_DrinkMaker_if_received_enough_money_for_it_after()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.4 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.4 euro");
 
             machineLogic.ReceiveMoney(0.4m);
-            drinkMakerAdapter.Received(1).Send("T:1:0");
+            drinkMakerProtocol.Received(1).Send("T:1:0");
         }
 
         [Test]
         public void Be_able_to_ask_one_Chocolate_with_no_Sugar_and_no_Stick_to_the_DrinkMaker()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 0, withStick: false);
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.5 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.5m);
-            drinkMakerAdapter.Received(1).Send("H::");
+            drinkMakerProtocol.Received(1).Send("H::");
         }
 
         [Test]
         public void Be_able_to_ask_a_Coffee_with_2_Sugar_and_a_Stick_to_the_DrinkMaker()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Coffee, nbOfSugar: 2, withStick: true);
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.6 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.6 euro");
 
             machineLogic.ReceiveMoney(0.6m);
-            drinkMakerAdapter.Received(1).Send("C:2:0");
+            drinkMakerProtocol.Received(1).Send("C:2:0");
         }
 
         [Test]
         public void Automatically_ask_a_Stick_as_soon_as_some_Sugar_is_ordered()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Coffee, nbOfSugar: 3);
 
             machineLogic.ReceiveMoney(0.6m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("C:3:0");
+            drinkMakerProtocol.Received(1).Send("C:3:0");
         }
 
         [Test]
         public void Send_the_amount_of_missing_money_to_the_DrinkMaker_when_no_money_has_been_received()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
 
             machineLogic.Receive(order);
 
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.4 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.4 euro");
         }
 
         [Test]
         public void Send_the_amount_of_missing_money_to_the_DrinkMaker_when_some_money_has_already_been_received_but_not_enough()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
 
             machineLogic.ReceiveMoney(0.1m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.3 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.3 euro");
         }
 
 
         [Test]
         public void Send_the_amount_of_missing_money_to_the_DrinkMaker_when_some_money_has_already_been_received_but_not_enough_and_ReceiveMoney_is_called_after()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 1, withStick: true);
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.5 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.1m);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.4 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.4 euro");
         }
 
         [Test]
         public void Not_prepare_a_free_beverage_just_after_providing_one()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 1, withStick: true);
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.5 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.5m);
-            drinkMakerAdapter.Received(1).Send("H:1:0");
+            drinkMakerProtocol.Received(1).Send("H:1:0");
 
-            drinkMakerAdapter.ClearReceivedCalls();
+            drinkMakerProtocol.ClearReceivedCalls();
 
             // Ask the same beverage
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("M:Missing 0.5 euro");
+            drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
         }
 
         [Test]
         public void Be_able_to_ask_an_Orange_juice_for_60_cents_of_euro()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.OrangeJuice);
 
             machineLogic.ReceiveMoney(0.6m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("O::");
+            drinkMakerProtocol.Received(1).Send("O::");
         }
 
         [TestCase(Product.Coffee, "Ch::")]
@@ -197,46 +197,46 @@ namespace CoffeeMachine.Tests
         [TestCase(Product.Tea, "Th::")]
         public void Be_able_to_ask_an_ExtraHot_HotBeverage_with_no_sugar(Product product, string expectedInstructions)
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(product, extraHot: true);
 
             machineLogic.ReceiveMoney(0.6m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send(expectedInstructions);
+            drinkMakerProtocol.Received(1).Send(expectedInstructions);
         }
 
         [Test]
         public void Never_ask_an_ExtraHot_Orange_juice_to_the_DrinkMaker_whatever_the_initial_Order()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.OrangeJuice, extraHot: true);
 
             machineLogic.ReceiveMoney(0.6m);
-            drinkMakerAdapter.Received(1).Send("M:Pick a beverage");
+            drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
             machineLogic.Receive(order);
-            drinkMakerAdapter.Received(1).Send("O::");
+            drinkMakerProtocol.Received(1).Send("O::");
         }
 
         [Test]
         public void Be_able_to_print_a_report_with_how_many_drinks_were_sold_and_the_total_amount_of_money_Earned_so_far()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
             var report = machineLogic.GetFinancialReport();
@@ -257,12 +257,12 @@ namespace CoffeeMachine.Tests
         [Test]
         public void Notify_via_a_message_but_also_notify_us_via_EMail_when_shortage_is_detected()
         {
-            var drinkMakerAdapter = Substitute.For<ITalkToTheDrinkMaker>();
+            var drinkMakerProtocol = Substitute.For<ITalkTheDrinkMakerProtocol>();
             var beverageQuantityChecker = Substitute.For<ICheckBeverageQuantity>();
             var emailNotifier = Substitute.For<INotifyViaEMail>();
 
             var machineLogic = new CoffeeMachineBuilder()
-                .WithDrinkMakerAdapter(drinkMakerAdapter)
+                .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .WithBeverageQuantityChecker(beverageQuantityChecker)
                 .WithEMailNotifier(emailNotifier)
                 .BuildCoffeeMachineLogic();
@@ -272,7 +272,7 @@ namespace CoffeeMachine.Tests
             var order = new CustomerIncomingOrder(Product.OrangeJuice, extraHot: true);
             machineLogic.Receive(order);
 
-            drinkMakerAdapter.Received().Send("M:OrangeJuice shortage (a notification has been sent to our logistic division). Please pick another option.");
+            drinkMakerProtocol.Received().Send("M:OrangeJuice shortage (a notification has been sent to our logistic division). Please pick another option.");
 
             CheckThatAnEmailNotificationHasBeenSentForOrangeJuiceShortage(emailNotifier);
         }
