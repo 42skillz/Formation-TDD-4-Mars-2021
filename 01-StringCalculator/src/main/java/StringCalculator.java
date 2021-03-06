@@ -1,6 +1,5 @@
 public class StringCalculator {
-    public int add(String stringNumbers) throws Exception {
-
+    public static int add(String stringNumbers) throws Exception {
         return new StringCalculatorBuilder()
                 .extractNumbers(stringNumbers)
                 .handleNegativesNumbers()

@@ -8,9 +8,6 @@ public class StringCalculatorBuilder {
     // Supplier needed for stream & exception
     Supplier<Stream<Integer>> integersSupplier;
 
-    public StringCalculatorBuilder() {
-    }
-
     public StringCalculatorBuilder extractNumbers(String stringNumbers) {
         char delimiter = DEFAULT_DELIMITER;
         if (stringNumbers.equals("")) stringNumbers = "0";
