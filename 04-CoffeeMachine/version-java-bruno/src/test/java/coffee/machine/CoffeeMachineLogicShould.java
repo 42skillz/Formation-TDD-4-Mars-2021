@@ -57,6 +57,10 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("C:2:0");
     }
 
+    static Stream<Arguments> argWhenAmountOfMissingMoney() {
+        return Stream.of(
+                Arguments.of("Coffee", 0.5, 0.10), Arguments.of("Chocolate", 0.2, 0.30),Arguments.of("Tea", 0.2, 0.2));
+    }
     @ParameterizedTest
     @MethodSource("argWhenAmountOfMissingMoney")
     public void
@@ -80,6 +84,10 @@ public class CoffeeMachineLogicShould {
                 .isEqualTo("O::");
     }
 
+    private static Stream<Arguments> argWhenCustomerOrderOneExtraHotDrink() {
+        return Stream.of(
+                Arguments.of("Coffee", "Ch"), Arguments.of("Chocolate", "Hh"), Arguments.of("Tea", "Th"));
+    }
     @ParameterizedTest
     @MethodSource("argWhenCustomerOrderOneExtraHotDrink")
     public void
@@ -138,20 +146,6 @@ public class CoffeeMachineLogicShould {
 
         verify(coffeeMachineLogicBuilder.getEMailNotifier(), Mockito.times(1))
                 .notifyMissingDrink("CHOCOLATE");
-    }
-
-    private static Stream<Arguments> argWhenAmountOfMissingMoney() {
-        return Stream.of(Arguments.of("Coffee", 0.5, 0.10),
-                Arguments.of("Chocolate", 0.2, 0.30),
-                Arguments.of("Tea", 0.2, 0.2)
-        );
-    }
-
-    private static Stream<Arguments> argWhenCustomerOrderOneExtraHotDrink() {
-        return Stream.of(Arguments.of("Coffee", "Ch"),
-                Arguments.of("Chocolate", "Hh"),
-                Arguments.of("Tea", "Th")
-        );
     }
 
     private void assertThatBeverageCountForDrink(FinancialReport financialReport, CoffeeMachineLogic coffeeMachineLogic, int times, String drink, int nbSugars, KindOfDrink kindOfDrink) {
