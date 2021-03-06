@@ -2,73 +2,42 @@ package coffee.machine.infrastructure;
 
 import coffee.machine.domain.DrinkInstruction;
 import coffee.machine.domain.DrinkInstructionFailed.DrinkInstructionFailed;
-import coffee.machine.domain.IProvideDrinkInstruction;
-import coffee.machine.domain.IValidateDrinkInstruction;
+import coffee.machine.domain.DrinkInstructionFailed.KindOfDrinkInstructionFailed;
+import coffee.machine.domain.IAdaptCommandForTheDrinkMaker;
 import coffee.machine.domain.KindOfDrink;
-import coffee.machine.infrastructure.ErrorMessageAdapter.*;
+import coffee.machine.infrastructure.FormatMessageDrinkInstructionFailed.*;
 
-import java.util.HashMap;
+import java.util.Map;
 
-public class DrinkMakerAdapter {
+public class DrinkMakerAdapter implements IAdaptCommandForTheDrinkMaker {
 
-    final HashMap<KindOfDrink, Character> kindOfDrinkToDrinkDigit = new HashMap<>();
-    private final IValidateDrinkInstruction coffeeMachineLogic;
-    private final IProvideDrinkInstruction provideDrinkInstructions;
+    static Map<KindOfDrinkInstructionFailed, FormatMessageDrinkInstructionFailed> drinkInstructionByKinkOfDrinkInstructionFailed = Map.of(
+            KindOfDrinkInstructionFailed.DrinkNotSupported, new FormatMessageForDrinkNotSupported(),
+            KindOfDrinkInstructionFailed.DrinkShortage, new FormatMessageFailedShortageBeverage(),
+            KindOfDrinkInstructionFailed.DrinkIncompatibilityWithExtraHot, new FormatMessageForIncompatibilityWithExtraHotFeature(),
+            KindOfDrinkInstructionFailed.MissingMoney, new FormatMessageForMissingMoneyUser());
 
-    public DrinkMakerAdapter(IValidateDrinkInstruction logicService, IProvideDrinkInstruction provideDrinkInstructions) {
-        this.coffeeMachineLogic = logicService;
-        this.provideDrinkInstructions = provideDrinkInstructions;
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.TEA, 'T');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.CHOCOLATE, 'H');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.COFFEE, 'C');
-        this.kindOfDrinkToDrinkDigit.put(KindOfDrink.ORANGE_JUICE, 'O');
+    static Map<KindOfDrink, Character> kindOfDrinkByDrinkMakerCommands = Map.of(
+            KindOfDrink.TEA, 'T',
+            KindOfDrink.CHOCOLATE, 'H',
+            KindOfDrink.COFFEE, 'C',
+            KindOfDrink.ORANGE_JUICE, 'O'
+    );
+
+    @Override
+    public String FormatCommandToTheDrinkMaker(DrinkInstruction drinkInstruction) {
+        return adaptDrink(drinkInstruction) + adaptExtraHot(drinkInstruction) + ':' +
+                adaptNbSugars(drinkInstruction) + ':' + adaptStick(drinkInstruction);
     }
 
-
-    public String makeCommand(CustomerOrder order) {
-        // From infrastructure => to Domain
-        DrinkInstruction drinkInstruction = provideDrinkInstructions.adapt(order);
-
-        if (this.isDrinkInstructionFailed(drinkInstruction)) {
-            return this.adapt(drinkInstruction);
-        }
-
-        drinkInstruction = this.coffeeMachineLogic.checkValidityForDrinkPreparation(drinkInstruction);
-
-        // From Domain => infrastructure
-        return adapt(drinkInstruction);
+    @Override
+    public String FormatMessageTowardTheUserInterface(DrinkInstructionFailed drinkInstructionFailed) {
+        return formatMessageForDrinkInstructionFailed(drinkInstructionFailed);
     }
 
-    public String adapt(DrinkInstruction drinkInstruction) {
-        if (isDrinkInstructionFailed(drinkInstruction)) {
-            return SendErrorMessageToCoffeeMachine((DrinkInstructionFailed) drinkInstruction);
-        }
-        return adaptDrinkInstruction(drinkInstruction);
-    }
-
-    private String SendErrorMessageToCoffeeMachine(DrinkInstructionFailed drinkInstructionFailed) {
-        HashMap<DrinkInstructionFailed.KindDrinkInstructionFailed, ErrorMessageAdapter> adaptErrorMessages = new HashMap<>();
-
-        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkNotSupported, new ErrorMessageDrinkNotSupportedAdapter(drinkInstructionFailed));
-        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkShortage, new ErrorMessageFailedShortageAdapter(drinkInstructionFailed));
-        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.DrinkIncompatibilityWithExtraHot, new ErrorMessageIncompatibilityWithExtraHotAdapter(drinkInstructionFailed));
-        adaptErrorMessages.put(DrinkInstructionFailed.KindDrinkInstructionFailed.MissingMoney, new ErrorMessageMissingMoneyAdapter(drinkInstructionFailed));
-
-        return adaptErrorMessages.get(drinkInstructionFailed.getKindDrinkInstructionFailed()).formatMessage();
-
-    }
-
-    private String adaptDrinkInstruction(DrinkInstruction drinkInstruction) {
-        return adaptDrink(drinkInstruction) +
-                adaptExtraHot(drinkInstruction) +
-                ':' +
-                adaptNbSugars(drinkInstruction) +
-                ':' +
-                adaptStick(drinkInstruction);
-    }
-
-    private boolean isDrinkInstructionFailed(DrinkInstruction drinkInstruction) {
-        return drinkInstruction instanceof DrinkInstructionFailed;
+    private String formatMessageForDrinkInstructionFailed(DrinkInstructionFailed drinkInstruction) {
+        return drinkInstructionByKinkOfDrinkInstructionFailed.get(drinkInstruction.getKindOfDrinkInstructionFailed())
+                .formatMessage(drinkInstruction);
     }
 
     private String adaptStick(DrinkInstruction instructions) {
@@ -84,6 +53,6 @@ public class DrinkMakerAdapter {
     }
 
     private String adaptDrink(DrinkInstruction drinkInstruction) {
-        return this.kindOfDrinkToDrinkDigit.get(drinkInstruction.getDrink()).toString();
+        return kindOfDrinkByDrinkMakerCommands.get(drinkInstruction.getDrink()).toString();
     }
 }

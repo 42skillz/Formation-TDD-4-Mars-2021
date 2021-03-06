@@ -2,12 +2,11 @@ package coffee.machine.domain.DrinkInstructionFailed;
 
 import coffee.machine.domain.KindOfDrink;
 
-public class DrinkInstructionFailedShortage extends DrinkInstructionFailed {
-
+public class DrinkInstructionFailedBecauseShortageBeverage extends DrinkInstructionFailed {
     private final KindOfDrink kindOfDrink;
 
-    public DrinkInstructionFailedShortage(KindOfDrink kindOfDrink) {
-        kindDrinkInstructionFailed = KindDrinkInstructionFailed.DrinkShortage;
+    public DrinkInstructionFailedBecauseShortageBeverage(KindOfDrink kindOfDrink) {
+        kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.DrinkShortage;
         this.kindOfDrink = kindOfDrink;
     }
 

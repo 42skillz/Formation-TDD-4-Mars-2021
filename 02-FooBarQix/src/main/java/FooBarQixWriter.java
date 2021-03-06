@@ -12,6 +12,6 @@ public class FooBarQixWriter {
     public String Write(int from, int to) {
         final Stream<String> stringStream = IntStream.rangeClosed(from, to)
                 .mapToObj(n -> String.format("%3d : %s", n, this.fooBarQix.generate(n)));
-        return stringStream.collect(Collectors.joining("\n"));
+        return stringStream.collect(Collectors.joining("\n" ));
     }
 }

@@ -1,9 +1,9 @@
-import java.util.HashMap;
+import java.util.Map;
 
 public class CheckDivisibility {
-    private final HashMap<Integer, String> symbols;
+    private final Map<Integer, String> symbols;
 
-    public CheckDivisibility(HashMap<Integer, String> symbols) {
+    public CheckDivisibility(Map<Integer, String> symbols) {
         this.symbols = symbols;
     }
 

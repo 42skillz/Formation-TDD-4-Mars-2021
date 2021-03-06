@@ -7,6 +7,7 @@ public class FooBarQixWriterShould {
     public void write_from_1_to_10_when_call_FooBarQix_from_1_to_10() {
         Approvals.verify(new FooBarQixWriter().Write(1, 10));
     }
+
     @Test
     public void write_from_11_to_20_when_call_FooBarQix_from_11_to_20() {
         Approvals.verify(new FooBarQixWriter().Write(11, 20));

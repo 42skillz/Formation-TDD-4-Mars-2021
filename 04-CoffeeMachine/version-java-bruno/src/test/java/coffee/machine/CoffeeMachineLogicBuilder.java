@@ -1,29 +1,26 @@
 package coffee.machine;
 
-import coffee.machine.domain.BeverageQuantityChecker;
-import coffee.machine.domain.CoffeeMachineLogic;
-import coffee.machine.domain.EmailNotifier;
-import coffee.machine.domain.FinancialReport;
-import coffee.machine.infrastructure.DrinkInstructionAdapter;
+import coffee.machine.domain.*;
 import coffee.machine.infrastructure.DrinkMakerAdapter;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
 public class CoffeeMachineLogicBuilder {
+    private final CustomerOrderTranslationToDrinkInstruction orderTranslation;
     private FinancialReport financialReport;
     private BeverageQuantityChecker beverageQuantityChecker;
     private EmailNotifier emailNotifier;
 
     public CoffeeMachineLogicBuilder() {
+        orderTranslation = new CustomerOrderTranslationToDrinkInstruction();
         financialReport = null;
         beverageQuantityChecker = null;
         emailNotifier = null;
     }
 
-    public DrinkMakerAdapter buildCoffeeMachineLogic() {
-        var coffeeMachineLogic = new CoffeeMachineLogic(beverageQuantityChecker, emailNotifier, financialReport);
-        return new DrinkMakerAdapter(coffeeMachineLogic, new DrinkInstructionAdapter());
+    public CoffeeMachineLogic build() {
+        return new CoffeeMachineLogic(new DrinkMakerAdapter(), orderTranslation, beverageQuantityChecker, emailNotifier, financialReport);
     }
 
     public CoffeeMachineLogicBuilder withFinancialReport(FinancialReport financialReport) {
@@ -32,9 +29,8 @@ public class CoffeeMachineLogicBuilder {
     }
 
     public CoffeeMachineLogicBuilder withBeverageQuantityChecker(String drink, boolean isEmpty) {
-        DrinkInstructionAdapter drinkInstructionAdapter = new DrinkInstructionAdapter();
         this.beverageQuantityChecker = Mockito.mock(BeverageQuantityChecker.class);
-        when(beverageQuantityChecker.isEmpty(drinkInstructionAdapter.adaptDrink(drink))).thenReturn(isEmpty);
+        when(beverageQuantityChecker.isEmpty(this.orderTranslation.adaptDrink(drink))).thenReturn(isEmpty);
         return this;
     }
 

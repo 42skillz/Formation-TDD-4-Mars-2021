@@ -3,21 +3,9 @@ package coffee.machine.domain.DrinkInstructionFailed;
 import coffee.machine.domain.DrinkInstruction;
 
 public class DrinkInstructionFailed extends DrinkInstruction {
-    KindDrinkInstructionFailed kindDrinkInstructionFailed;
+    protected KindOfDrinkInstructionFailed kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.None;
 
-    public DrinkInstructionFailed() {
-        kindDrinkInstructionFailed = KindDrinkInstructionFailed.None;
-    }
-
-    public KindDrinkInstructionFailed getKindDrinkInstructionFailed() {
-        return this.kindDrinkInstructionFailed;
-    }
-
-    public enum KindDrinkInstructionFailed {
-        None,
-        MissingMoney,
-        DrinkShortage,
-        DrinkNotSupported,
-        DrinkIncompatibilityWithExtraHot,
+    public KindOfDrinkInstructionFailed getKindOfDrinkInstructionFailed() {
+        return this.kindOfDrinkInstructionFailed;
     }
 }

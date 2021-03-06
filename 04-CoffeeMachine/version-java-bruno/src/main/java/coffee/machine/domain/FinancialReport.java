@@ -3,6 +3,7 @@ package coffee.machine.domain;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FinancialReport {
     private final HashMap<KindOfDrink, Integer> kindOfDrinks;
@@ -26,7 +27,7 @@ public class FinancialReport {
         return amount.round(mathContext).doubleValue();
     }
 
-    public void addBeverageSold(DrinkInstruction instructions, HashMap<KindOfDrink, Double> drinkPrices) {
+    public void addBeverageSold(DrinkInstruction instructions, Map<KindOfDrink, Double> drinkPrices) {
         if (!this.kindOfDrinks.containsKey(instructions.getDrink())) {
             this.kindOfDrinks.put(instructions.getDrink(), 1);
         } else {

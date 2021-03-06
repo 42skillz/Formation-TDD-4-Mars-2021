@@ -1,9 +1,9 @@
-import java.util.HashMap;
+import java.util.Map;
 
 public class CheckContent {
-    private final HashMap<Integer, String> symbols;
+    private final Map<Integer, String> symbols;
 
-    public CheckContent(HashMap<Integer, String> symbols) {
+    public CheckContent(Map<Integer, String> symbols) {
         this.symbols = symbols;
     }
 

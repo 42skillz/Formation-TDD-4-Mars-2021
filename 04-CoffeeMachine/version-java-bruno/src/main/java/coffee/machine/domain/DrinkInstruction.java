@@ -1,6 +1,6 @@
 package coffee.machine.domain;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class DrinkInstruction {
     KindOfDrink drink;
@@ -17,7 +17,6 @@ public class DrinkInstruction {
     }
 
     public void setDrink(KindOfDrink drink) {
-
         this.drink = drink;
     }
 
@@ -29,7 +28,7 @@ public class DrinkInstruction {
         this.nbSugars = nbSugars;
     }
 
-    boolean isCustomerHaveEnoughMoney(HashMap<KindOfDrink, Double> drinkPrices) {
+    boolean isCustomerHaveEnoughMoney(Map<KindOfDrink, Double> drinkPrices) {
         return customerMoney >= drinkPrices.get(getDrink());
     }
 
