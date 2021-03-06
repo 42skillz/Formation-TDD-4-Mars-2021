@@ -33,7 +33,7 @@ namespace CoffeeMachine.Tests.Domain
 
             ReplacePreviousOrderWithNewOne(order);
 
-            if (!ReceivedEnoughMoney(order))
+            if (!ReceivedEnoughMoneyFor(order))
             {
                 ComputeMissingAmountAndSendMessageForIt(order);
                 return;
@@ -47,7 +47,7 @@ namespace CoffeeMachine.Tests.Domain
         {
             CollectMoney(amountInEuro);
 
-            if (ReceivedEnoughMoney(_receivedOrder))
+            if (ReceivedEnoughMoneyFor(_receivedOrder))
             {
                 var instruction = DrinkMakerAdapter.AdaptToDrinkMakerInstruction(_receivedOrder);
 
@@ -104,7 +104,7 @@ namespace CoffeeMachine.Tests.Domain
             _receivedMoney = _receivedMoney + amountInEuro ?? amountInEuro;
         }
 
-        private bool ReceivedEnoughMoney(CustomerIncomingOrder order)
+        private bool ReceivedEnoughMoneyFor(CustomerIncomingOrder order)
         {
             if (order == null)
             {
