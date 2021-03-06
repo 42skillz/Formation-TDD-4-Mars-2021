@@ -8,8 +8,7 @@ namespace CoffeeMachine.Tests.Domain
         private readonly IForwardMessagesToEndUser _endUserForwarder;
         private readonly CoffeeMachineAnalytics _analytics;
         
-        private decimal? _receivedMoney;
-        private CustomerIncomingOrder _receivedOrder;
+        private readonly Collector _collector;
 
         public CoffeeMachineLogic(ITalkTheDrinkMakerProtocol drinkMakerProtocol, ICheckBeverageQuantity beverageQuantityChecker, INotifyViaEMail emailNotifier)
         {
@@ -18,11 +17,10 @@ namespace CoffeeMachine.Tests.Domain
             
             _beverageQuantityChecker = beverageQuantityChecker;
             _emailNotifier = emailNotifier;
-            _analytics = new CoffeeMachineAnalytics();
+            _collector = new Collector();
+            _analytics = new CoffeeMachineAnalytics(_collector);
         }
         
-        private decimal ReceivedMoney => _receivedMoney ?? 0;
-
         public void Receive(CustomerIncomingOrder order)
         {
             if (ShortageIsDetectedForThisBeverage(order))
@@ -32,11 +30,11 @@ namespace CoffeeMachine.Tests.Domain
                 return;
             }
 
-            ReplacePreviousOrderWithNewOne(order);
+            _collector.ReplacePreviousOrderWithNewOne(order);
 
-            if (!ReceivedEnoughMoneyFor(order))
+            if (!_collector.ReceivedEnoughMoneyFor(order))
             {
-                ComputeMissingAmountAndSendMessageForIt(order);
+                ComputeMissingAmountAndSendMessageForIt(order, _collector.ReceivedMoney);
                 return;
             }
 
@@ -45,15 +43,15 @@ namespace CoffeeMachine.Tests.Domain
 
         public void ReceiveMoney(decimal amountInEuro)
         {
-            CollectMoney(amountInEuro);
+            _collector.CollectMoney(amountInEuro);
 
-            if (ReceivedEnoughMoneyFor(_receivedOrder))
+            if (_collector.ReceivedEnoughMoneyFor(_collector.ReceivedOrder))
             {
-                ExecuteDrinkTransaction(_receivedOrder);
+                ExecuteDrinkTransaction(_collector.ReceivedOrder);
             }
             else
             {
-                ComputeMissingAmountAndSendMessageForIt(_receivedOrder);
+                ComputeMissingAmountAndSendMessageForIt(_collector.ReceivedOrder, _collector.ReceivedMoney);
             }
         }
 
@@ -67,24 +65,19 @@ namespace CoffeeMachine.Tests.Domain
             return _beverageQuantityChecker.IsEmpty(order.Product.ToString());
         }
 
-        private void ReplacePreviousOrderWithNewOne(CustomerIncomingOrder order)
-        {
-            _receivedOrder = order;
-        }
-
         private void ExecuteDrinkTransaction(CustomerIncomingOrder order)
         {
             _drinkMakerAdapter.MakeDrink(order);
             
             // Log the transaction
-            _analytics.Record(_receivedOrder, ReceivedMoney);
+            _analytics.Record(_collector.ReceivedOrder, _collector.ReceivedMoney);
 
             // close the transaction
-            _receivedOrder = null;
-            _receivedMoney = null;
+            _collector.CollectMoney();
+            
         }
 
-        private void ComputeMissingAmountAndSendMessageForIt(CustomerIncomingOrder order)
+        public void ComputeMissingAmountAndSendMessageForIt(CustomerIncomingOrder order, decimal receivedMoney)
         {
             if (order == null)
             {
@@ -92,24 +85,9 @@ namespace CoffeeMachine.Tests.Domain
                 return;
             }
 
-            var missingAmount = Prices.ComputeMissingAmount(order.Product, ReceivedMoney);
+            var missingAmount = Prices.ComputeMissingAmount(order.Product, receivedMoney);
 
             _endUserForwarder.SendMissingAmountMessage(missingAmount);
-        }
-
-        private void CollectMoney(decimal amountInEuro)
-        {
-            _receivedMoney = _receivedMoney + amountInEuro ?? amountInEuro;
-        }
-
-        private bool ReceivedEnoughMoneyFor(CustomerIncomingOrder order)
-        {
-            if (order == null)
-            {
-                return false;
-            }
-
-            return (ReceivedMoney >= Prices.GetUnitPriceFor(order.Product));
         }
     }
 }
