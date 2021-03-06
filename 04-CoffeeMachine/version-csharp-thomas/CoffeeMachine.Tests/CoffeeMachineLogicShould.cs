@@ -22,6 +22,7 @@ namespace CoffeeMachine.Tests
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("T:1:0");
         }
 
@@ -35,8 +36,8 @@ namespace CoffeeMachine.Tests
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
-
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("M:Missing 0.4 euro");
 
             machineLogic.ReceiveMoney(0.4m);
