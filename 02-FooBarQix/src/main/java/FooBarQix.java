@@ -4,7 +4,6 @@ import java.util.Map;
 public class FooBarQix {
     private final CheckContent checkContent;
     private final CheckDivisibility checkDivisibility;
-    private Map<Integer, String> symbols;
 
     public FooBarQix() {
         this(new HashMap<>() {{

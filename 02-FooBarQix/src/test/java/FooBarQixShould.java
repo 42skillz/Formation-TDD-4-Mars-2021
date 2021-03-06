@@ -11,13 +11,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class FooBarQixShould {
 
-    private static Stream<Arguments> argRegularNumbers() {
-        return Stream.of(Arguments.of(1, "1" ),
-                Arguments.of(2, "2" ),
-                Arguments.of("4", "4" )
-        );
+    static Stream<Arguments> argRegularNumbers() {
+        return Stream.of(Arguments.of(1, "1" ), Arguments.of(2, "2" ), Arguments.of("4", "4" ));
     }
-
     @ParameterizedTest
     @MethodSource("argRegularNumbers" )
     public void return_number_when_number_is_regular(Integer regularNumber, String expected) {
