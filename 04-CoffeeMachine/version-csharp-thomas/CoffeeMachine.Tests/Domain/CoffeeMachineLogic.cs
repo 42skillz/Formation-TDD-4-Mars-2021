@@ -5,7 +5,7 @@ namespace CoffeeMachine.Tests.Domain
         private readonly ITalkToTheDrinkMaker _drinkMakerAdapter;
         private readonly ICheckBeverageQuantity _beverageQuantityChecker;
         private readonly INotifyViaEMail _emailNotifier;
-        private readonly IForwardMessagesToEndUser _messageToEndUserForwarder;
+        private readonly IForwardMessagesToEndUser _endUserForwarder;
         private readonly CoffeeMachineAnalytics _analytics;
         
         private decimal? _receivedMoney;
@@ -17,7 +17,7 @@ namespace CoffeeMachine.Tests.Domain
             _beverageQuantityChecker = beverageQuantityChecker;
             _emailNotifier = emailNotifier;
             _analytics = new CoffeeMachineAnalytics();
-            _messageToEndUserForwarder = new MessageToEndUserForwarder(drinkMakerAdapter);
+            _endUserForwarder = new MessageToEndUserForwarder(drinkMakerAdapter);
         }
         
         private decimal ReceivedMoney => _receivedMoney.HasValue ? _receivedMoney.Value : 0;
@@ -26,7 +26,7 @@ namespace CoffeeMachine.Tests.Domain
         {
             if (ShortageIsDetectedForThisBeverage(order))
             {
-                _messageToEndUserForwarder.SendMessage($"{order.Product.ToString()} shortage (a notification has been sent to our logistic division). Please pick another option.");
+                _endUserForwarder.SendMessage($"{order.Product.ToString()} shortage (a notification has been sent to our logistic division). Please pick another option.");
                 _emailNotifier.NotifyMissingDrink(order.Product.ToString());
                 return;
             }
@@ -90,13 +90,13 @@ namespace CoffeeMachine.Tests.Domain
         {
             if (order == null)
             {
-                _messageToEndUserForwarder.SendMessage($"Pick a beverage");
+                _endUserForwarder.SendMessage($"Pick a beverage");
                 return;
             }
 
             var missingAmount = Prices.ComputeMissingAmount(order.Product, ReceivedMoney);
 
-            _messageToEndUserForwarder.SendMissingAmountMessage(missingAmount);
+            _endUserForwarder.SendMissingAmountMessage(missingAmount);
         }
 
         private void CollectMoney(decimal amountInEuro)
