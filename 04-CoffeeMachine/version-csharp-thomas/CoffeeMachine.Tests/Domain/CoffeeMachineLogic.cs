@@ -6,8 +6,8 @@ namespace CoffeeMachine.Tests.Domain
         private readonly ICheckBeverageQuantity _beverageQuantityChecker;
         private readonly INotifyViaEMail _emailNotifier;
         private readonly IForwardMessagesToEndUser _endUserForwarder;
-        private readonly CoffeeMachineAnalytics _analytics;
         
+        private readonly CoffeeMachineAnalytics _analytics;
         private readonly Collector _collector;
 
         public CoffeeMachineLogic(ITalkTheDrinkMakerProtocol drinkMakerProtocol, ICheckBeverageQuantity beverageQuantityChecker, INotifyViaEMail emailNotifier)
