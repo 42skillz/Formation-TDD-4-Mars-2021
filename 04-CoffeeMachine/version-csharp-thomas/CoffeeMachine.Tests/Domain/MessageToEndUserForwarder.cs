@@ -2,11 +2,11 @@ using System.Globalization;
 
 namespace CoffeeMachine.Tests.Domain
 {
-    public class MessageForwarder : IForwardMessages
+    public class MessageToEndUserForwarder : IForwardMessagesToEndUser
     {
         private readonly ITalkToTheDrinkMaker _drinkMakerAdapter;
 
-        public MessageForwarder(ITalkToTheDrinkMaker drinkMakerAdapter)
+        public MessageToEndUserForwarder(ITalkToTheDrinkMaker drinkMakerAdapter)
         {
             _drinkMakerAdapter = drinkMakerAdapter;
         }
