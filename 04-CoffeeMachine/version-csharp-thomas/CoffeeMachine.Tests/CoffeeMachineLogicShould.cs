@@ -17,11 +17,10 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
-
             machineLogic.ReceiveMoney(0.4m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
             machineLogic.Receive(order);
             drinkMakerProtocol.Received(1).Send("T:1:0");
         }
@@ -54,8 +53,8 @@ namespace CoffeeMachine.Tests
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 0, withStick: false);
-
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.5m);
@@ -73,6 +72,7 @@ namespace CoffeeMachine.Tests
 
             var order = new CustomerIncomingOrder(Product.Coffee, nbOfSugar: 2, withStick: true);
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("M:Missing 0.6 euro");
 
             machineLogic.ReceiveMoney(0.6m);
@@ -88,12 +88,12 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(Product.Coffee, nbOfSugar: 3);
-
             machineLogic.ReceiveMoney(0.6m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(Product.Coffee, nbOfSugar: 3);
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("C:3:0");
         }
 
@@ -107,7 +107,6 @@ namespace CoffeeMachine.Tests
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
-
             machineLogic.Receive(order);
 
             drinkMakerProtocol.Received(1).Send("M:Missing 0.4 euro");
@@ -122,12 +121,12 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
-
             machineLogic.ReceiveMoney(0.1m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(Product.Tea, nbOfSugar: 1, withStick: true);
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("M:Missing 0.3 euro");
         }
 
@@ -142,8 +141,8 @@ namespace CoffeeMachine.Tests
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 1, withStick: true);
-
             machineLogic.Receive(order);
+            
             drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.1m);
@@ -160,8 +159,8 @@ namespace CoffeeMachine.Tests
                 .BuildCoffeeMachineLogic();
 
             var order = new CustomerIncomingOrder(Product.Chocolate, nbOfSugar: 1, withStick: true);
-
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("M:Missing 0.5 euro");
 
             machineLogic.ReceiveMoney(0.5m);
@@ -183,12 +182,12 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(Product.OrangeJuice);
-
             machineLogic.ReceiveMoney(0.6m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(Product.OrangeJuice);
             machineLogic.Receive(order);
+            
             drinkMakerProtocol.Received(1).Send("O::");
         }
 
@@ -203,12 +202,13 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(product, extraHot: true);
 
             machineLogic.ReceiveMoney(0.6m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(product, extraHot: true);
             machineLogic.Receive(order);
+            
             drinkMakerProtocol.Received(1).Send(expectedInstructions);
         }
 
@@ -221,12 +221,12 @@ namespace CoffeeMachine.Tests
                 .WithDrinkMakerProtocol(drinkMakerProtocol)
                 .BuildCoffeeMachineLogic();
 
-            var order = new CustomerIncomingOrder(Product.OrangeJuice, extraHot: true);
-
             machineLogic.ReceiveMoney(0.6m);
             drinkMakerProtocol.Received(1).Send("M:Pick a beverage");
 
+            var order = new CustomerIncomingOrder(Product.OrangeJuice, extraHot: true);
             machineLogic.Receive(order);
+
             drinkMakerProtocol.Received(1).Send("O::");
         }
 
