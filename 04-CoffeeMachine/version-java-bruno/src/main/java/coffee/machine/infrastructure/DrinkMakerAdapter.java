@@ -12,10 +12,10 @@ import java.util.Map;
 public class DrinkMakerAdapter implements IAdaptCommandForTheDrinkMaker {
 
     static Map<KindOfDrinkInstructionFailed, FormatMessageDrinkInstructionFailed> drinkInstructionByKinkOfDrinkInstructionFailed = Map.of(
-            KindOfDrinkInstructionFailed.DrinkNotSupported, new FormatMessageForDrinkNotSupported(),
-            KindOfDrinkInstructionFailed.DrinkShortage, new FormatMessageFailedShortageBeverage(),
-            KindOfDrinkInstructionFailed.DrinkIncompatibilityWithExtraHot, new FormatMessageForIncompatibilityWithExtraHotFeature(),
-            KindOfDrinkInstructionFailed.MissingMoney, new FormatMessageForMissingMoneyUser());
+            KindOfDrinkInstructionFailed.DRINK_NOT_SUPPORTED, new FormatMessageForDrinkNotSupported(),
+            KindOfDrinkInstructionFailed.DRINK_SHORTAGE_BEVERAGE, new FormatMessageFailedShortageBeverage(),
+            KindOfDrinkInstructionFailed.INCOMPATIBILITY_WITH_EXTRA_HOT_FEATURE, new FormatMessageForIncompatibilityWithExtraHotFeature(),
+            KindOfDrinkInstructionFailed.MISSING_USER_MONEY, new FormatMessageForMissingMoneyUser());
 
     static Map<KindOfDrink, Character> kindOfDrinkByDrinkMakerCommands = Map.of(
             KindOfDrink.TEA, 'T',

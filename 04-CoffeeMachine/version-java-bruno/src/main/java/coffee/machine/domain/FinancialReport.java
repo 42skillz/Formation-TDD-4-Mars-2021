@@ -10,15 +10,15 @@ public class FinancialReport {
     private double totalAmount;
 
     public FinancialReport() {
-        kindOfDrinks = new HashMap<>();
+        this.kindOfDrinks = new HashMap<>();
     }
 
     public int totalBeverageSold() {
-        return kindOfDrinks.values().stream().reduce(Integer::sum).orElse(0);
+        return this.kindOfDrinks.values().stream().reduce(Integer::sum).orElse(0);
     }
 
     public int beverageCount(KindOfDrink kindOfDrink) {
-        return kindOfDrinks.get(kindOfDrink);
+        return this.kindOfDrinks.get(kindOfDrink);
     }
 
     public double totalAmount() {
@@ -34,6 +34,6 @@ public class FinancialReport {
             int drinkCount = this.kindOfDrinks.get(instructions.getDrink());
             this.kindOfDrinks.put(instructions.getDrink(), ++drinkCount);
         }
-        totalAmount += drinkPrices.get(instructions.getDrink());
+        this.totalAmount += drinkPrices.get(instructions.getDrink());
     }
 }

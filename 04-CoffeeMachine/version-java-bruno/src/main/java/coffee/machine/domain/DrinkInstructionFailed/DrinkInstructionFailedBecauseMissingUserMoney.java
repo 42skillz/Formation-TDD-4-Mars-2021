@@ -4,7 +4,7 @@ public class DrinkInstructionFailedBecauseMissingUserMoney extends DrinkInstruct
     private final double moneyMissing;
 
     public DrinkInstructionFailedBecauseMissingUserMoney(double moneyMissing) {
-        kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.MissingMoney;
+        this.kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.MISSING_USER_MONEY;
         this.moneyMissing = moneyMissing;
     }
 

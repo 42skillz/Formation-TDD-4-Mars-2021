@@ -6,7 +6,7 @@ public class DrinkInstructionFailedBecauseShortageBeverage extends DrinkInstruct
     private final KindOfDrink kindOfDrink;
 
     public DrinkInstructionFailedBecauseShortageBeverage(KindOfDrink kindOfDrink) {
-        kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.DrinkShortage;
+        this.kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.DRINK_SHORTAGE_BEVERAGE;
         this.kindOfDrink = kindOfDrink;
     }
 

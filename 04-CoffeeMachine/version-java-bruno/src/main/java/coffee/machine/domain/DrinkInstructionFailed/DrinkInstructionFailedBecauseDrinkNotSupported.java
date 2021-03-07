@@ -4,7 +4,7 @@ public class DrinkInstructionFailedBecauseDrinkNotSupported extends DrinkInstruc
     private final String drinkNotSupported;
 
     public DrinkInstructionFailedBecauseDrinkNotSupported(String drinkNotSupported) {
-        this.kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.DrinkNotSupported;
+        this.kindOfDrinkInstructionFailed = KindOfDrinkInstructionFailed.DRINK_NOT_SUPPORTED;
         this.drinkNotSupported = drinkNotSupported;
     }
 

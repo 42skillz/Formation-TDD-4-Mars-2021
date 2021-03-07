@@ -13,14 +13,19 @@ public class CoffeeMachineLogicBuilder {
     private EmailNotifier emailNotifier;
 
     public CoffeeMachineLogicBuilder() {
-        orderTranslation = new CustomerOrderTranslationToDrinkInstruction();
-        financialReport = null;
-        beverageQuantityChecker = null;
-        emailNotifier = null;
+        this.orderTranslation = new CustomerOrderTranslationToDrinkInstruction();
+        this.financialReport = null;
+        this.beverageQuantityChecker = null;
+        this.emailNotifier = null;
     }
 
     public CoffeeMachineLogic build() {
-        return new CoffeeMachineLogic(new DrinkMakerAdapter(), orderTranslation, beverageQuantityChecker, emailNotifier, financialReport);
+        return new CoffeeMachineLogic(
+                new DrinkMakerAdapter(),
+                this.orderTranslation,
+                this.beverageQuantityChecker,
+                this.emailNotifier,
+                this.financialReport);
     }
 
     public CoffeeMachineLogicBuilder withFinancialReport(FinancialReport financialReport) {
@@ -30,7 +35,7 @@ public class CoffeeMachineLogicBuilder {
 
     public CoffeeMachineLogicBuilder withBeverageQuantityChecker(String drink, boolean isEmpty) {
         this.beverageQuantityChecker = Mockito.mock(BeverageQuantityChecker.class);
-        when(beverageQuantityChecker.isEmpty(this.orderTranslation.adaptDrink(drink))).thenReturn(isEmpty);
+        when(this.beverageQuantityChecker.isEmpty(this.orderTranslation.adaptDrink(drink))).thenReturn(isEmpty);
         return this;
     }
 

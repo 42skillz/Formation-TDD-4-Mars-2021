@@ -13,7 +13,7 @@ public class DrinkInstruction {
     }
 
     public KindOfDrink getDrink() {
-        return drink;
+        return this.drink;
     }
 
     public void setDrink(KindOfDrink drink) {
@@ -21,7 +21,7 @@ public class DrinkInstruction {
     }
 
     public int getNbSugars() {
-        return nbSugars;
+        return this.nbSugars;
     }
 
     public void setNbSugars(int nbSugars) {
@@ -29,7 +29,7 @@ public class DrinkInstruction {
     }
 
     boolean isCustomerHaveEnoughMoney(Map<KindOfDrink, Double> drinkPrices) {
-        return customerMoney >= drinkPrices.get(getDrink());
+        return this.customerMoney >= drinkPrices.get(getDrink());
     }
 
     public boolean getExtraHot() {

@@ -65,7 +65,7 @@ public class CoffeeMachineLogic {
     }
 
     private boolean isThereShortageForThisDrink(DrinkInstruction drinkInstruction) {
-        return beverageQuantityChecker != null && beverageQuantityChecker.isEmpty(drinkInstruction.getDrink());
+        return this.beverageQuantityChecker != null && this.beverageQuantityChecker.isEmpty(drinkInstruction.getDrink());
     }
 
     private DrinkInstructionFailed drinkInstructionFailedForBeverageShortage(DrinkInstruction drinkInstruction) {
@@ -80,6 +80,6 @@ public class CoffeeMachineLogic {
     }
 
     private DrinkInstruction drinkInstructionFailedBecauseMissingUserMoney(DrinkInstruction instruction) {
-        return new DrinkInstructionFailedBecauseMissingUserMoney(kindOfDrinkPrices.get(instruction.drink) - instruction.customerMoney);
+        return new DrinkInstructionFailedBecauseMissingUserMoney(this.kindOfDrinkPrices.get(instruction.drink) - instruction.customerMoney);
     }
 }

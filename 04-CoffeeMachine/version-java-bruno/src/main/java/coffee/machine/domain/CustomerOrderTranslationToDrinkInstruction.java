@@ -37,7 +37,7 @@ public class CustomerOrderTranslationToDrinkInstruction implements ITranslateCus
         drinkInstruction.setNbSugars(customerOrder.getNbSugars());
         drinkInstruction.setCustomerMoney(customerOrder.getMoney());
 
-        if (customerOrder.getExtraHot() && thisDrinkDoNotSupportExtraHot(drinkInstruction)) {
+        if (customerOrder.getExtraHot() && this.thisDrinkDoNotSupportExtraHot(drinkInstruction)) {
             return new DrinkInstructionFailedBecauseBeverageIncompatibilityWithExtraHotFeature(drinkInstruction);
         }
 
@@ -51,6 +51,6 @@ public class CustomerOrderTranslationToDrinkInstruction implements ITranslateCus
     }
 
     private boolean thisDrinkDoNotSupportExtraHot(DrinkInstruction drinkInstruction) {
-        return !extraHotDrinksAvailable.contains(drinkInstruction.getDrink());
+        return !this.extraHotDrinksAvailable.contains(drinkInstruction.getDrink());
     }
 }
