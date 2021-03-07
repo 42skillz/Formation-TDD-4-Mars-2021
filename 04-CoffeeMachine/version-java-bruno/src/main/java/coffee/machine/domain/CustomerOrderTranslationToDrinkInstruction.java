@@ -3,25 +3,17 @@ package coffee.machine.domain;
 import coffee.machine.domain.DrinkInstructionFailed.DrinkInstructionFailedBecauseBeverageIncompatibilityWithExtraHotFeature;
 import coffee.machine.domain.DrinkInstructionFailed.DrinkInstructionFailedBecauseDrinkNotSupported;
 import coffee.machine.infrastructure.CustomerOrder;
+import org.javatuples.Pair;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CustomerOrderTranslationToDrinkInstruction implements ITranslateCustomerOrderToDrinkInstruction {
 
-    static List<KindOfDrink> extraHotDrinksAvailable = Stream.of(
-            KindOfDrink.TEA,
-            KindOfDrink.COFFEE,
-            KindOfDrink.CHOCOLATE)
-            .collect(Collectors.toList());
-
-    static Map<String, KindOfDrink> drinkLabelToKindOfDrinks = Map.of(
-            "Tea", KindOfDrink.TEA,
-            "Chocolate", KindOfDrink.CHOCOLATE,
-            "Coffee", KindOfDrink.COFFEE,
-            "OrangeJuice", KindOfDrink.ORANGE_JUICE
+    static Map<String, Pair<KindOfDrink, Boolean>> drinkLabelToKindOfDrinks = Map.of(
+            "Tea", new Pair<>(KindOfDrink.TEA, true),
+            "Chocolate", new Pair<>(KindOfDrink.CHOCOLATE, true),
+            "Coffee", new Pair<>(KindOfDrink.COFFEE, true),
+            "OrangeJuice", new Pair<>(KindOfDrink.ORANGE_JUICE, false)
     );
 
     @Override
@@ -47,10 +39,15 @@ public class CustomerOrderTranslationToDrinkInstruction implements ITranslateCus
     }
 
     public KindOfDrink adaptDrink(String drink) {
-        return drinkLabelToKindOfDrinks.get(drink);
+        return drinkLabelToKindOfDrinks.get(drink).getValue0();
     }
 
     private boolean thisDrinkDoNotSupportExtraHot(DrinkInstruction drinkInstruction) {
-        return !this.extraHotDrinksAvailable.contains(drinkInstruction.getDrink());
+        for (Pair<KindOfDrink, Boolean> item: drinkLabelToKindOfDrinks.values()) {
+            if (item.getValue0().equals(drinkInstruction.getDrink())) {
+                return !item.getValue1();
+            }
+        }
+        return true;
     }
 }
