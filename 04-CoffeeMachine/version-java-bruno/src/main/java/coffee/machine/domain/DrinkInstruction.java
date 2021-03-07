@@ -3,14 +3,10 @@ package coffee.machine.domain;
 import java.util.Map;
 
 public class DrinkInstruction {
-    KindOfDrink drink;
-    int nbSugars;
-    double customerMoney;
+    private KindOfDrink drink;
+    private int nbSugars;
+    private double customerMoney;
     private boolean extraHot;
-
-    public void setCustomerMoney(double customerMoney) {
-        this.customerMoney = customerMoney;
-    }
 
     public KindOfDrink getDrink() {
         return this.drink;
@@ -38,5 +34,11 @@ public class DrinkInstruction {
 
     public void setExtraHot(boolean extraHot) {
         this.extraHot = extraHot;
+    }
+
+    double getCustomerMoney() { return this.customerMoney; }
+
+    void setCustomerMoney(double customerMoney) {
+        this.customerMoney = customerMoney;
     }
 }

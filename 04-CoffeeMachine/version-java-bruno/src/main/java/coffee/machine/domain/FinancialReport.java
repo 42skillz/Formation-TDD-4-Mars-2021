@@ -14,7 +14,9 @@ public class FinancialReport {
     }
 
     public int totalBeverageSold() {
-        return this.kindOfDrinks.values().stream().reduce(Integer::sum).orElse(0);
+        return this.kindOfDrinks.values().stream()
+                .reduce(Integer::sum)
+                    .orElse(0);
     }
 
     public int beverageCount(KindOfDrink kindOfDrink) {

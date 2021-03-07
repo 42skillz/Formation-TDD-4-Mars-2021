@@ -80,6 +80,6 @@ public class CoffeeMachineLogic {
     }
 
     private DrinkInstruction drinkInstructionFailedBecauseMissingUserMoney(DrinkInstruction instruction) {
-        return new DrinkInstructionFailedBecauseMissingUserMoney(this.kindOfDrinkPrices.get(instruction.drink) - instruction.customerMoney);
+        return new DrinkInstructionFailedBecauseMissingUserMoney(this.kindOfDrinkPrices.get(instruction.getDrink()) - instruction.getCustomerMoney());
     }
 }
